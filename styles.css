@@ -398,8 +398,6 @@ body::before{
 }
 
 .pill-btn{
-  position: relative;
-  overflow: hidden;
   width: min(82vw, 360px);
   padding: 18px 18px;
   border-radius: 999px;
@@ -418,24 +416,6 @@ body::before{
   -webkit-tap-highlight-color: transparent;
   transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, background .22s ease;
 }
-
-/* Fondo opcional del botón "Agregar cliente" (imagen o GIF) */
-.pill-btn::before{
-  content:"";
-  position:absolute;
-  inset: 0;
-  background-image: var(--addbtn-bg-url);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  opacity: var(--addbtn-bg-opacity);
-  transform: translate3d(var(--addbtn-bg-x), var(--addbtn-bg-y), 0) scale(var(--addbtn-bg-scale));
-  filter: saturate(1.05) contrast(1.02);
-  pointer-events:none;
-  z-index: 0;
-}
-
-.pill-label{ position: relative; z-index: 1; display:block; }
 .pill-btn:active{ transform: scale(0.985); }
 
 .pill-btn[data-state="ok"]{
@@ -864,12 +844,6 @@ body::before{
   --btn-bg-scale: 1;
   --btn-bg-x: 0px;
   --btn-bg-y: 0px;
-
-  --addbtn-bg-url: none;
-  --addbtn-bg-opacity: 0.28;
-  --addbtn-bg-scale: 1;
-  --addbtn-bg-x: 0px;
-  --addbtn-bg-y: 0px;
 }
 
 body::before{
@@ -923,7 +897,6 @@ body::before{
 
   --app-bg-opacity: 0.18;
   --btn-bg-opacity: 0.22;
-  --addbtn-bg-opacity: 0.20;
 }
 
 /* Ajustes de componentes en tema claro */

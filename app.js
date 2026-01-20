@@ -1121,26 +1121,16 @@ function applyAppearance(){
   document.documentElement.style.setProperty('--btn-bg-scale', String(appearance.btnBgScale ?? 1));
   document.documentElement.style.setProperty('--btn-bg-x', (appearance.btnBgX ?? 0) + 'px');
   document.documentElement.style.setProperty('--btn-bg-y', (appearance.btnBgY ?? 0) + 'px');
-
-  // add client button bg
-  document.documentElement.style.setProperty('--addbtn-bg-url', cssUrlOrNone(appearance.addBtnBg));
-  document.documentElement.style.setProperty('--addbtn-bg-scale', String(appearance.addBtnBgScale ?? 1));
-  document.documentElement.style.setProperty('--addbtn-bg-x', (appearance.addBtnBgX ?? 0) + 'px');
-  document.documentElement.style.setProperty('--addbtn-bg-y', (appearance.addBtnBgY ?? 0) + 'px');
 }
 
 function updateAppearanceThumbs(){
   const appThumb = document.getElementById('appBgThumb');
   const btnThumb = document.getElementById('btnBgThumb');
-  const addThumb = document.getElementById('addBtnBgThumb');
   if (appThumb){
     appThumb.style.backgroundImage = appearance.appBg ? `url("${appearance.appBg}")` : 'none';
   }
   if (btnThumb){
     btnThumb.style.backgroundImage = appearance.btnBg ? `url("${appearance.btnBg}")` : 'none';
-  }
-  if (addThumb){
-    addThumb.style.backgroundImage = appearance.addBtnBg ? `url("${appearance.addBtnBg}")` : 'none';
   }
 
   const darkBtn = document.getElementById('themeDarkBtn');
@@ -1166,7 +1156,7 @@ const bgFitBtn = document.getElementById('bgFitBtn');
 const bgCancelBtn = document.getElementById('bgCancelBtn');
 const bgSaveBtn = document.getElementById('bgSaveBtn');
 
-let bgTarget = null; // 'app' | 'btn' | 'addbtn'
+let bgTarget = null; // 'app' | 'btn'
 let draft = { dataUrl:null, x:0, y:0, scale:1 };
 let dragging = false;
 let dragStart = { x:0, y:0, ox:0, oy:0 };
@@ -1175,28 +1165,18 @@ function openBgEditor(target){
   bgTarget = target;
   if (!bgEditorModal) return;
 
-  const isRingBtn = target === 'btn';
-  const isAddBtn = target === 'addbtn';
-  if (bgEditorTitle){
-    bgEditorTitle.textContent = isRingBtn ? 'Fondo del botón central' : (isAddBtn ? 'Fondo del botón "+ Agregar cliente"' : 'Fondo de la app');
-  }
-  if (bgEditorSub){
-    bgEditorSub.textContent = isRingBtn ? 'Ajustá cómo se ve dentro del círculo' : (isAddBtn ? 'Ajustá cómo se ve dentro del botón' : 'Ajustá cómo se ve en el fondo');
-  }
+  const isBtn = target === 'btn';
+  if (bgEditorTitle) bgEditorTitle.textContent = isBtn ? 'Fondo del botón' : 'Fondo de la app';
+  if (bgEditorSub) bgEditorSub.textContent = isBtn ? 'Ajustá cómo se ve dentro del círculo' : 'Ajustá cómo se ve en el fondo';
 
-  bgPreview?.classList.toggle('is-circle', isRingBtn);
+  bgPreview?.classList.toggle('is-circle', isBtn);
 
   // load from current appearance
-  if (isRingBtn){
+  if (isBtn){
     draft.dataUrl = appearance.btnBg || null;
     draft.x = appearance.btnBgX ?? 0;
     draft.y = appearance.btnBgY ?? 0;
     draft.scale = appearance.btnBgScale ?? 1;
-  }else if (isAddBtn){
-    draft.dataUrl = appearance.addBtnBg || null;
-    draft.x = appearance.addBtnBgX ?? 0;
-    draft.y = appearance.addBtnBgY ?? 0;
-    draft.scale = appearance.addBtnBgScale ?? 1;
   }else{
     draft.dataUrl = appearance.appBg || null;
     draft.x = appearance.appBgX ?? 0;
@@ -1297,11 +1277,6 @@ bgSaveBtn?.addEventListener('click', ()=>{
     appearance.btnBgX = draft.x;
     appearance.btnBgY = draft.y;
     appearance.btnBgScale = draft.scale;
-  }else if (bgTarget === 'addbtn'){
-    appearance.addBtnBg = draft.dataUrl;
-    appearance.addBtnBgX = draft.x;
-    appearance.addBtnBgY = draft.y;
-    appearance.addBtnBgScale = draft.scale;
   }else{
     appearance.appBg = draft.dataUrl;
     appearance.appBgX = draft.x;
@@ -1363,10 +1338,8 @@ const themeDarkBtn = document.getElementById('themeDarkBtn');
 const themeLightBtn = document.getElementById('themeLightBtn');
 const editAppBgBtn = document.getElementById('editAppBgBtn');
 const editBtnBgBtn = document.getElementById('editBtnBgBtn');
-const editAddBtnBgBtn = document.getElementById('editAddBtnBgBtn');
 const clearAppBgBtn = document.getElementById('clearAppBgBtn');
 const clearBtnBgBtn = document.getElementById('clearBtnBgBtn');
-const clearAddBtnBgBtn = document.getElementById('clearAddBtnBgBtn');
 
 themeDarkBtn?.addEventListener('click', ()=>{
   appearance.theme = 'dark';
@@ -1383,7 +1356,6 @@ themeLightBtn?.addEventListener('click', ()=>{
 
 editAppBgBtn?.addEventListener('click', ()=> openBgEditor('app'));
 editBtnBgBtn?.addEventListener('click', ()=> openBgEditor('btn'));
-editAddBtnBgBtn?.addEventListener('click', ()=> openBgEditor('addbtn'));
 
 clearAppBgBtn?.addEventListener('click', ()=>{
   appearance.appBg = null;
@@ -1395,14 +1367,6 @@ clearAppBgBtn?.addEventListener('click', ()=>{
 clearBtnBgBtn?.addEventListener('click', ()=>{
   appearance.btnBg = null;
   appearance.btnBgX = 0; appearance.btnBgY = 0; appearance.btnBgScale = 1;
-  saveAppearance(appearance);
-  applyAppearance();
-  updateAppearanceThumbs();
-});
-
-clearAddBtnBgBtn?.addEventListener('click', ()=>{
-  appearance.addBtnBg = null;
-  appearance.addBtnBgX = 0; appearance.addBtnBgY = 0; appearance.addBtnBgScale = 1;
   saveAppearance(appearance);
   applyAppearance();
   updateAppearanceThumbs();

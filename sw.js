@@ -1,4 +1,4 @@
-const CACHE_NAME = 'barber-turnos-vip-v2';
+const CACHE_NAME = 'barber-turnos-vip-v1';
 const ASSETS = [
   './',
   './index.html',
