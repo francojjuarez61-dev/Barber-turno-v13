@@ -278,8 +278,19 @@ body::before{
   stroke: url(#ringCyan);
   filter: url(#glowIce);
   stroke-dasharray: 490;
-  stroke-dashoffset: 490;
-  transition: stroke .32s ease, filter .32s ease;
+  /* UI only: aro completo (sin animación de "progreso" que se borra) */
+  stroke-dashoffset: 0;
+  transition: stroke .32s ease, filter .32s ease, opacity .32s ease;
+}
+
+/* Respiración iOS: el aro late suave mientras corre el timer */
+.ring[data-running="1"] .ring-progress{
+  animation: ringBreath 1.6s ease-in-out infinite;
+}
+
+@keyframes ringBreath{
+  0%,100%{ opacity: 0.78; }
+  50%{ opacity: 1; }
 }
 
 .ring-cap{
@@ -287,13 +298,11 @@ body::before{
   opacity: 0;
   filter: drop-shadow(0 0 12px rgba(52,215,255,0.30));
   transition: opacity .25s ease, fill .32s ease;
-  animation: capPulse 1.45s ease-in-out infinite;
+  /* UI only: ocultamos el cap para que no se perciba como progreso */
+  animation: none;
 }
 
-@keyframes capPulse{
-  0%,100%{ transform: scale(1); }
-  50%{ transform: scale(1.08); }
-}
+@keyframes capPulse{ 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.08); } }
 
 .ring-content{
   position:absolute;

@@ -126,7 +126,9 @@ const ringMeta = document.getElementById('ringMeta');
 const R = 78;
 const C = 2 * Math.PI * R;
 ringProgress.style.strokeDasharray = `${C}`;
-ringProgress.style.strokeDashoffset = `${C}`;
+// UI only: en esta versión el aro NO representa progreso (no se "va borrando").
+// Se mantiene completo y solo cambia de color según estado + respira con una animación CSS.
+ringProgress.style.strokeDashoffset = `0`;
 
 let running = false;
 let baseMs = 0;
@@ -168,19 +170,10 @@ function fmtDurHM(min){
 function setMode(mode){ ringBtn.dataset.mode = mode; }
 
 function setProgress(p01){
-  // UI only: el aro empieza "encendido" (completo) y se va apagando a medida que pasa el tiempo.
-  // No cambia cálculos del timer, solo la representación visual.
-  const offset = C * p01;
-  ringProgress.style.strokeDashoffset = `${offset}`;
-
-  // El punto luminoso marca el borde entre parte encendida y apagada.
-  const edge = 1 - p01;
-  const angle = (Math.PI * 2) * edge - Math.PI/2;
-  const cx = 100 + Math.cos(angle) * R;
-  const cy = 100 + Math.sin(angle) * R;
-  ringCap.setAttribute('cx', cx.toFixed(2));
-  ringCap.setAttribute('cy', cy.toFixed(2));
-  ringCap.style.opacity = running ? '0.9' : '0';
+  // UI only: ya no animamos el progreso. Dejamos el aro completo y
+  // ocultamos el "cap" para evitar la sensación de cuenta regresiva.
+  ringProgress.style.strokeDashoffset = `0`;
+  ringCap.style.opacity = '0';
 }
 
 function tick(){
@@ -244,7 +237,8 @@ function startTimer(durationMs){
   warnedOvertime = false;
 
   setMode('normal');
-  ringCap.style.opacity = '0.9';
+  ringCap.style.opacity = '0';
+  ringProgress.style.opacity = '1';
 
   cancelAnimationFrame(rafId);
   rafId = requestAnimationFrame(tick);
@@ -272,6 +266,7 @@ function stopTimer(){
 
   // UI only: en reposo el progreso no debe verse.
   setProgress(1);
+  ringProgress.style.opacity = '0.35';
   ringCap.style.opacity = '0';
 }
 
